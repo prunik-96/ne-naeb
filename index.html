@@ -19,24 +19,36 @@
       margin: 0 auto;
     }
     #wheel {
+      position: relative;
       margin: 20px auto;
       width: 300px;
       height: 300px;
       border: 10px solid #444;
       border-radius: 50%;
       background: conic-gradient(
-        #0f0 0deg 36deg,
-        #0f0 36deg 72deg,
-        #0f0 72deg 108deg,
-        #0f0 108deg 144deg,
-        #0f0 144deg 180deg,
-        #0f0 180deg 216deg,
-        #0f0 216deg 252deg,
-        #0f0 252deg 288deg,
-        #0f0 288deg 324deg,
+        #1abc9c 0deg 36deg,
+        #2ecc71 36deg 72deg,
+        #3498db 72deg 108deg,
+        #9b59b6 108deg 144deg,
+        #f1c40f 144deg 180deg,
+        #e67e22 180deg 216deg,
+        #e74c3c 216deg 252deg,
+        #34495e 252deg 288deg,
+        #95a5a6 288deg 324deg,
         #f00 324deg 360deg
       );
       transition: transform 4s cubic-bezier(0.33, 1, 0.68, 1);
+    }
+    .segment-label {
+      position: absolute;
+      width: 50%;
+      left: 50%;
+      top: 50%;
+      transform-origin: left center;
+      text-align: left;
+      font-size: 12px;
+      color: #fff;
+      pointer-events: none;
     }
     #spinButton {
       padding: 10px 20px;
@@ -60,9 +72,15 @@
   <button id="spinButton">Крутить</button>
   <div class="prize" id="prize"></div>
 
+  <audio id="spinSound" src="https://www.fesliyanstudios.com/play-mp3/4385" preload="auto"></audio>
+  <audio id="winSound" src="https://www.fesliyanstudios.com/play-mp3/6672" preload="auto"></audio>
+
   <script>
     const wheel = document.getElementById("wheel");
     const prizeDiv = document.getElementById("prize");
+    const spinSound = document.getElementById("spinSound");
+    const winSound = document.getElementById("winSound");
+
     const prizes = [
       { name: "AWP | Dragon Lore", img: "https://cdn.csgoskins.gg/images/skins/awp-dragon-lore.png" },
       { name: "AK-47 | Fire Serpent", img: "https://cdn.csgoskins.gg/images/skins/ak-47-fire-serpent.png" },
@@ -76,10 +94,25 @@
       { name: "Ничего... Вы проиграли.", img: "https://cdn-icons-png.flaticon.com/512/1828/1828843.png" }
     ];
 
+    const createLabels = () => {
+      const angle = 360 / prizes.length;
+      prizes.forEach((prize, index) => {
+        const label = document.createElement("div");
+        label.className = "segment-label";
+        label.style.transform = `rotate(${index * angle}deg) translateX(10px)`;
+        label.innerHTML = prize.name;
+        wheel.appendChild(label);
+      });
+    };
+
+    createLabels();
+
     let currentRotation = 0;
 
     document.getElementById("spinButton").addEventListener("click", () => {
       prizeDiv.innerHTML = "";
+      spinSound.currentTime = 0;
+      spinSound.play();
 
       const loseMostOfTheTime = Math.random() < 0.9;
       let selectedIndex = loseMostOfTheTime ? 9 : Math.floor(Math.random() * 9);
@@ -95,8 +128,13 @@
       setTimeout(() => {
         const prize = prizes[selectedIndex];
         prizeDiv.innerHTML = `<h2>${prize.name}</h2><img src="${prize.img}" alt="${prize.name}">`;
+        if (selectedIndex !== 9) {
+          winSound.play();
+          alert(`🎉 Поздравляем! Вы выиграли: ${prize.name}`);
+        }
       }, 4000);
     });
   </script>
 </body>
 </html>
+
