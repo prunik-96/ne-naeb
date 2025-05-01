@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Колесо Фортуны — CS2</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #111;
+      color: white;
+    }
+    #wheel {
+      margin: 50px auto;
+      width: 300px;
+      height: 300px;
+      border: 10px solid #444;
+      border-radius: 50%;
+      position: relative;
+      background: conic-gradient(
+        #0f0 0deg 36deg,
+        #0f0 36deg 72deg,
+        #0f0 72deg 108deg,
+        #0f0 108deg 144deg,
+        #0f0 144deg 180deg,
+        #0f0 180deg 216deg,
+        #0f0 216deg 252deg,
+        #0f0 252deg 288deg,
+        #0f0 288deg 324deg,
+        #f00 324deg 360deg
+      );
+    }
+    #pointer {
+      width: 0;
+      height: 0;
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-bottom: 30px solid yellow;
+      margin: 0 auto;
+    }
+    #spinButton {
+      padding: 10px 20px;
+      font-size: 18px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+    .prize {
+      margin-top: 20px;
+    }
+    .prize img {
+      width: 200px;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎯 Колесо Фортуны — CS2</h1>
+  <div id="pointer"></div>
+  <div id="wheel"></div>
+  <button id="spinButton">Крутить</button>
+  <div class="prize" id="prize"></div>
+
+  <script>
+    const prizes = [
+      { name: "AWP | Dragon Lore", img: "https://cdn.csgoskins.gg/images/skins/awp-dragon-lore.png" },
+      { name: "AK-47 | Fire Serpent", img: "https://cdn.csgoskins.gg/images/skins/ak-47-fire-serpent.png" },
+      { name: "M4A4 | Howl", img: "https://cdn.csgoskins.gg/images/skins/m4a4-howl.png" },
+      { name: "Butterfly Knife | Fade", img: "https://cdn.csgoskins.gg/images/skins/butterfly-fade.png" },
+      { name: "Karambit | Doppler", img: "https://cdn.csgoskins.gg/images/skins/karambit-doppler.png" },
+      { name: "Glove | Pandora's Box", img: "https://cdn.csgoskins.gg/images/skins/pandoras-box.png" },
+      { name: "Bayonet | Marble Fade", img: "https://cdn.csgoskins.gg/images/skins/bayonet-marble-fade.png" },
+      { name: "Desert Eagle | Blaze", img: "https://cdn.csgoskins.gg/images/skins/deagle-blaze.png" },
+      { name: "StatTrak™ AK-47 | Neon Rider", img: "https://cdn.csgoskins.gg/images/skins/ak-47-neon-rider.png" },
+      { name: "Ничего... Вы проиграли.", img: "https://cdn-icons-png.flaticon.com/512/1828/1828843.png" } // last is lose
+    ];
+
+    document.getElementById("spinButton").addEventListener("click", () => {
+      const prizeDiv = document.getElementById("prize");
+      prizeDiv.innerHTML = "";
+
+      // 90% шанс на проигрыш
+      const loseMostOfTheTime = Math.random() < 0.9;
+      let selectedIndex = loseMostOfTheTime ? 9 : Math.floor(Math.random() * 9);
+
+      const prize = prizes[selectedIndex];
+      prizeDiv.innerHTML = `<h2>${prize.name}</h2><img src="${prize.img}" alt="${prize.name}">`;
+    });
+  </script>
+</body>
+</html>
