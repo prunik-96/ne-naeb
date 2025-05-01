@@ -10,13 +10,20 @@
       background-color: #111;
       color: white;
     }
+    #pointer {
+      width: 0;
+      height: 0;
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-bottom: 30px solid yellow;
+      margin: 0 auto;
+    }
     #wheel {
-      margin: 50px auto;
+      margin: 20px auto;
       width: 300px;
       height: 300px;
       border: 10px solid #444;
       border-radius: 50%;
-      position: relative;
       background: conic-gradient(
         #0f0 0deg 36deg,
         #0f0 36deg 72deg,
@@ -29,14 +36,7 @@
         #0f0 288deg 324deg,
         #f00 324deg 360deg
       );
-    }
-    #pointer {
-      width: 0;
-      height: 0;
-      border-left: 20px solid transparent;
-      border-right: 20px solid transparent;
-      border-bottom: 30px solid yellow;
-      margin: 0 auto;
+      transition: transform 4s cubic-bezier(0.33, 1, 0.68, 1);
     }
     #spinButton {
       padding: 10px 20px;
@@ -61,6 +61,8 @@
   <div class="prize" id="prize"></div>
 
   <script>
+    const wheel = document.getElementById("wheel");
+    const prizeDiv = document.getElementById("prize");
     const prizes = [
       { name: "AWP | Dragon Lore", img: "https://cdn.csgoskins.gg/images/skins/awp-dragon-lore.png" },
       { name: "AK-47 | Fire Serpent", img: "https://cdn.csgoskins.gg/images/skins/ak-47-fire-serpent.png" },
@@ -71,19 +73,29 @@
       { name: "Bayonet | Marble Fade", img: "https://cdn.csgoskins.gg/images/skins/bayonet-marble-fade.png" },
       { name: "Desert Eagle | Blaze", img: "https://cdn.csgoskins.gg/images/skins/deagle-blaze.png" },
       { name: "StatTrak™ AK-47 | Neon Rider", img: "https://cdn.csgoskins.gg/images/skins/ak-47-neon-rider.png" },
-      { name: "Ничего... Вы проиграли.", img: "https://cdn-icons-png.flaticon.com/512/1828/1828843.png" } // last is lose
+      { name: "Ничего... Вы проиграли.", img: "https://cdn-icons-png.flaticon.com/512/1828/1828843.png" }
     ];
 
+    let currentRotation = 0;
+
     document.getElementById("spinButton").addEventListener("click", () => {
-      const prizeDiv = document.getElementById("prize");
       prizeDiv.innerHTML = "";
 
-      // 90% шанс на проигрыш
       const loseMostOfTheTime = Math.random() < 0.9;
       let selectedIndex = loseMostOfTheTime ? 9 : Math.floor(Math.random() * 9);
 
-      const prize = prizes[selectedIndex];
-      prizeDiv.innerHTML = `<h2>${prize.name}</h2><img src="${prize.img}" alt="${prize.name}">`;
+      const degreesPerSegment = 360 / prizes.length;
+      const randomFullSpins = 5;
+      const stopAngle = 360 - (degreesPerSegment * selectedIndex) - (degreesPerSegment / 2);
+
+      currentRotation += randomFullSpins * 360 + stopAngle;
+
+      wheel.style.transform = `rotate(${currentRotation}deg)`;
+
+      setTimeout(() => {
+        const prize = prizes[selectedIndex];
+        prizeDiv.innerHTML = `<h2>${prize.name}</h2><img src="${prize.img}" alt="${prize.name}">`;
+      }, 4000);
     });
   </script>
 </body>
